@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class Gameplay extends JPanel implements MouseListener {
     private String page = "MENU";
-    private int[][] board = new int[3][3];
+    private String[][] board = new String[3][3];
     private Deck deck;
 
     private int guessRow = -1;  // card position that the user is guessing at
@@ -102,7 +102,7 @@ public class Gameplay extends JPanel implements MouseListener {
                             g.setColor(Color.black);
     
                         // add card number and suit to card
-                        g.drawString(deck.getCardString(board[i][j]), 50+155*j, 160+210*i);
+                        g.drawString((board[i][j]), 50+155*j, 160+210*i);
 
                         // if user is guessing a card, show higher & lower options
                         if (guessing && i == guessRow && j == guessCol)
@@ -139,7 +139,7 @@ public class Gameplay extends JPanel implements MouseListener {
                             g.drawString("OVER", 125 +(250 - g.getFontMetrics().stringWidth("GAME"))/2, 320);
 
                             g.setFont(smaller);
-                            g.drawString("You had " + deck.getRemainingCards() + " cards left", 162, 350);
+                            g.drawString("You had " + deck.getNumberOfCards() + " cards left", 162, 350);
 
 
                             g.setColor(Color.white);
@@ -296,7 +296,7 @@ public class Gameplay extends JPanel implements MouseListener {
     public void makeGuess(int guess)
     {
         // store value of current card to compare
-        int currentcard = board[guessRow][guessCol];
+        String currentcard = board[guessRow][guessCol];
 
         // find value of next card in the deck
         board[guessRow][guessCol] = deck.nextCard();

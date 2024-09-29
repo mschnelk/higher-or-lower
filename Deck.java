@@ -1,27 +1,45 @@
 import java.util.*;
 
 public class Deck {
-    
-    private int[] deck = new int[52];
-    private int remainingcards = 52;
+
+    private String[] stringDeck = new String[52];   // holds actual card values (e.g. K♥︎)
+    private int numberOfCards;
 
     public Deck()
     {
-        // add cards to deck
-        for (int i = 1; i <= 52; i++)
-            deck[i-1] = i;
+        int value;
+        for (int i = 51; i >= 0; i--)
+        {
+            int cardNumber = i+1;   // number 1-52 used to find suit and value
+            value = (cardNumber)%13;   
+            if (value == 0)
+                stringDeck[i] = "K" + getSuit(cardNumber);
+            else if (value == 12)
+                stringDeck[i] = "Q" + getSuit(cardNumber);
+            else if (value == 11)
+                stringDeck[i] = "J" + getSuit(cardNumber);
+            else if (value == 1)
+                stringDeck[i] = "A" + getSuit(cardNumber);
+            else
+                stringDeck[i] = value + getSuit(cardNumber);
+                    
+            numberOfCards++;       
+        }
+
         shuffle();
     }
 
     public void shuffle()
     {
         Random rand = new Random();
-        for (int i = 0; i < remainingcards; i ++)
+        for (int i = 0; i < numberOfCards; i ++)
         {
-            int oldCard = deck[i];
-            int newPos = rand.nextInt(remainingcards);
-            deck[i] = deck[newPos];
-            deck[newPos] = oldCard;
+            String oldCardString = stringDeck[i];
+
+            int newPos = rand.nextInt(numberOfCards);
+
+            stringDeck[i] = stringDeck[newPos];
+            stringDeck[newPos] = oldCardString;
 
         }
     }
@@ -38,70 +56,55 @@ public class Deck {
         else
             suit = "♦";
         return suit;
-    }  
-    
-    public String getColor(int card)
+    }      
+
+    public String nextCard()
     {
-        if (getSuit(card).equals("♠️") || getSuit(card).equals("♣️"))
+        String nextcard = stringDeck[numberOfCards-1];
+        numberOfCards--;
+        return nextcard;
+    }
+
+    public int getCardValue(String card)
+    {
+        if (card.contains("K"))
+            return 13;
+        else if (card.contains("Q"))
+            return 12;
+        else if (card.contains("J"))
+            return 11;
+        else if (card.contains("A"))
+            return 1;
+        else if (card.contains("10"))
+            return 10;
+        else 
+            return Character.getNumericValue(card.charAt(0));
+    }
+
+    public String getColor(String cardValue)
+    {
+        if (cardValue.contains("♠️") || cardValue.contains("♣️"))
             return "black";
         else
             return "red";
     }
 
-    public int cardAt(int position)
+    public int getNumberOfCards()
     {
-        return deck[position];
-    }
-
-    public int getCardValue(int card)
-    {
-        for (int i = 13; i > 0; i--)
-            if (card%i == 0)
-                return i;
-
-        return 0;
-    }
-
-    public String getCardString(int card)
-    {
-        String value = "";
-        if (getCardValue(card) == 13)
-            value += "K";
-        else if (getCardValue(card) == 12)
-            value += "Q";
-        else if (getCardValue(card) == 11)
-            value += "J";
-        else if (getCardValue(card) == 1)
-            value += "A";
-        else
-            value += getCardValue(card);
-        
-        return value + getSuit(card);
-    }
-
-    public int nextCard()
-    {
-        int nextcard = cardAt(52-remainingcards);
-        remainingcards--;
-        return nextcard;
-    }
-
-    public int getRemainingCards()
-    {
-        return remainingcards;
+        return numberOfCards;
     }
 
     public String toString()
     {
         String deckstring = "";
-        for (int i = 52-remainingcards; i < 52; i++)
-            deckstring += "[" + deck[i] + "] ";
+        for (int i = 0; i < numberOfCards; i++)
+            deckstring += "[" + stringDeck[i] + "] ";
         return deckstring;
     }
 
     public void reset()
     {
-        remainingcards = 52;
+        numberOfCards = 52;
         shuffle();
     }
 }
