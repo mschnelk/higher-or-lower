@@ -5,7 +5,7 @@ My friends and I used to play this to pass time, now I can do the same without a
 
 
 ## How to Use
-Download the Higher or Lower folder and contents inside. Open the HigherOrLower.exe file and enjoy! Gameplay instructions are in the program.
+Download the repository, open the HigherOrLower.exe file inside the Higher or Lower folder and enjoy! Gameplay instructions are in the program.
 
 ## Possible Future Additions
 <ul>
