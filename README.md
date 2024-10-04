@@ -1,13 +1,17 @@
-# High-Low Solitaire Game
-I built this based on a game my frineds and I used to play to pass time in class.
+# Higher or Lower Solitaire Game
+It's a simple guessing game made with Java Swing where the user tries to get through the whole deck by guessing whether the next card will be higher or lower. 
 
-It's a simple guessing game, and although the concept is easy to grasp, 
-the luck involved makes it hard to win.  
+My friends and I used to play this to pass time, now I can do the same without a deck of cards and a large amount of table space. 
+
 
 ## How to Use
-Download the files and run the Main java file. Gameplay instructions are in the program.
+Download the Higher or Lower folder and contents inside. Open the HigherOrLower.exe file and enjoy! Gameplay instructions are in the program.
 
-## To-Do
+## Possible Future Additions
 <ul>
-  <li>add leaderboard</li>
+<li> Option to quit mid game </li>
+<li> Levels of Difficults (fewer cards or multiple lives) <li>
+<li> Visible deck and counter, allowing players to see remaining cards </li>
+<li> Realistic playing card designs </li>
+<li> Animations </li>
 </ul>
