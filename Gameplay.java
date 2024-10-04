@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 
 public class Gameplay extends JPanel implements MouseListener {
     private String page = "MENU";
@@ -12,7 +14,7 @@ public class Gameplay extends JPanel implements MouseListener {
 
     private boolean guessing = false;
     private boolean playing = false;
-
+    private boolean win = false;
 
     public Gameplay()
     {
@@ -59,8 +61,8 @@ public class Gameplay extends JPanel implements MouseListener {
                 // print subtitle
                 g.setColor(Color.black);
                 g.setFont(title);
-                int titlewidth = g.getFontMetrics().stringWidth("High-Low Solitaire");
-                g.drawString ("High-Low Solitaire", (500-titlewidth)/2, 200);
+                int titlewidth = g.getFontMetrics().stringWidth("Higher or Lower");
+                g.drawString ("Higher or Lower", (500-titlewidth)/2, 200);
                 
                 // print ♠️ ♣️
                 g.setColor(Color.black);
@@ -72,18 +74,21 @@ public class Gameplay extends JPanel implements MouseListener {
                 g.setColor(Color.red);
                 g.fillRect(250-titlewidth/2+10, 375, titlewidth-20, 50);
                 g.fillRect(250-titlewidth/2+10, 440, titlewidth-20, 50);
+                g.fillRect(250-titlewidth/2+10, 505, titlewidth-20, 50);
+
 
                 // option text
                 g.setColor(Color.pink);
                 g.setFont(normal);
                 g.drawString("New Game",190, 410);
                 g.drawString("Instructions", 183, 475);
+                g.drawString("Leaderboard", 180, 537);
                 break;
             case "GAME":
                 // print title
                 g.setFont(smaller);
                 g.setColor(Color.white);
-                g.drawString("High-Low Solitaire", 250-(g.getFontMetrics().stringWidth("High-Low Solitaire"))/2, 25);
+                g.drawString("Higher or Lower", 250-(g.getFontMetrics().stringWidth("Higher or Lower"))/2, 25);
             
                 // draw board
                 for (int i = 0; i < board.length; i++)
@@ -124,23 +129,62 @@ public class Gameplay extends JPanel implements MouseListener {
                         if (!playing)
                         {
                             // big box for game over screen
-                            g.setColor(Color.red);
+                            if (win)
+                                g.setColor(Color.blue);
+                            else
+                                g.setColor(Color.red);
                             g.fillRect(125, 225, 250, 250);
 
                             // small boxes for after game choices
                             g.setColor(Color.pink);
                             g.fillRect(175, 370 ,150, 40);
                             g.fillRect(180, 420, 140, 30);
-
+                                    
                             // add text to game over box
-                            g.setColor(Color.pink);
                             g.setFont(title);
-                            g.drawString ("GAME", 125 +(250 - g.getFontMetrics().stringWidth("GAME"))/2, 280);
-                            g.drawString("OVER", 125 +(250 - g.getFontMetrics().stringWidth("GAME"))/2, 320);
+                            if (win)
+                            {
+                                g.setColor(Color.white);
+                                g.setFont(title);
+                                g.drawString ("YOU", 125 +(250 - g.getFontMetrics().stringWidth("YOU"))/2, 280);
+                                g.drawString("WON", 125 +(250 - g.getFontMetrics().stringWidth("WON"))/2, 320);
+                            }
+                            else
+                            {
+                                g.setColor(Color.pink);
+                                g.drawString ("GAME", 125 +(250 - g.getFontMetrics().stringWidth("GAME"))/2, 280);
+                                g.drawString("OVER", 125 +(250 - g.getFontMetrics().stringWidth("OVER"))/2, 320);
+
+                                g.setFont(smaller);
+                                int score = deck.getNumberOfCards() + 1;
+                                g.drawString("You had " + score + " cards left", 125 +(250 - g.getFontMetrics().stringWidth("You had XX cards left"))/2, 350);
+                            }
+            
+                            g.setColor(Color.white);
+                            g.setFont(normal);
+                            g.drawString ("Play Again", 250 - (g.getFontMetrics().stringWidth("Play Again"))/2, 400);
 
                             g.setFont(smaller);
-                            g.drawString("You had " + deck.getNumberOfCards() + " cards left", 162, 350);
+                            g.drawString("Back to Home", 250 - (g.getFontMetrics().stringWidth("Back to Home"))/2, 442);
+                            
+                        }
+                        // if they win (go through all the cards, show a winning screen)
+                        else if (!playing && deck.getNumberOfCards()==0)
+                        {
+                             // big box for game over screen
+                             g.setColor(Color.blue);
+                             g.fillRect(125, 225, 250, 250);
+ 
+                             // small boxes for after game choices
+                             g.setColor(Color.pink);
+                             g.fillRect(175, 370 ,150, 40);
+                             g.fillRect(180, 420, 140, 30);
 
+                              // add text to game over box
+                            g.setColor(Color.white);
+                            g.setFont(title);
+                            g.drawString ("YOU", 125 +(250 - g.getFontMetrics().stringWidth("YOU"))/2, 280);
+                            g.drawString("WON", 125 +(250 - g.getFontMetrics().stringWidth("WON"))/2, 320);
 
                             g.setColor(Color.white);
                             g.setFont(normal);
@@ -160,6 +204,7 @@ public class Gameplay extends JPanel implements MouseListener {
                 g.setColor(Color.white);
                 g.fillRect(1,1,500,700);
                 
+                // add title & subtitle
                 g.setColor(Color.black);
                 g.setFont(title);
                 g.drawString("Instructions", 250 - (g.getFontMetrics().stringWidth("Instructions"))/2, 60);
@@ -167,8 +212,9 @@ public class Gameplay extends JPanel implements MouseListener {
                 g.setFont(normal);
                 g.drawString("Important Notes:", 20, 280);
 
+                // add instructions
                 g.setFont(smaller);
-                g.drawString ("In High-Low Solitaire, 9 cards will be placed face up", 20, 100);
+                g.drawString ("In Higher or Lower, 9 cards will be placed face up", 20, 100);
                 g.drawString("in a 3x3 grid", 20, 120);
                 g.drawString("The player will choose a face up card and guess if the", 20, 150);
                 g.drawString("the next card in the deck will be higher or lower than", 20, 170);
@@ -194,7 +240,108 @@ public class Gameplay extends JPanel implements MouseListener {
                 g.setFont(smaller);
                 g.drawString("Back to Menu", 250 - (g.getFontMetrics().stringWidth("Back to Menu"))/2, 532);
                 break;
+        
+            case "SCORES":
+                // add title
+                g.setFont(title);
+                g.setColor(Color.white);
+                g.drawString("Leaderboard", 250 - (g.getFontMetrics().stringWidth("Leaderboard"))/2, 160);
+                
+                // box to hold scores
+                g.setColor(Color.red);
+                g.fillRect(100, 200, 300, 300);
+
+                g.setFont(normal);
+                g.setColor(Color.white);
+
+                // add scores
+                for (int i = 0; i < 5; i++)
+                {
+                    g.drawString(i+1 + ".", 130, 260+50*i);
+
+                    try {
+                        g.drawString(scoreData(i)[0], 160, 260+50*i);
+                        g.drawString(scoreData(i)[1], 380 - g.getFontMetrics().stringWidth(scoreData(i)[1]), 260+50*i);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // add button to return home
+                g.setColor(Color.white);
+                g.fillRect(150, 525, 200, 50);
+
+                g.setColor(Color.pink);
+                g.drawString("Back to Home", 250 - (g.getFontMetrics().stringWidth("Back to Home"))/2, 560);
+
+                break;
+            }
+    }
+
+
+    // return string array [score, name] for given place in file
+    public String[] scoreData(int place) throws FileNotFoundException
+    {
+        File scores = new File("leaderboard.txt");
+        Scanner fileReader = new Scanner(scores);
+        String nextScore = null;
+
+        for (int i = 0; i <= place; i++)
+            nextScore = fileReader.nextLine();
+
+        // scores as stored as ##name, use substring to get the wanted data
+        fileReader.close();
+        String[] leaderboardArray = {nextScore.substring(0, 2), nextScore.substring( 2)};
+
+        return leaderboardArray;
+    }
+
+    public void checkForHighScore (int score) throws FileNotFoundException
+    {
+        File scores = new File("leaderboard.txt");
+        String[][] leaderboard = new String[5][2];  // [score, name]
+
+        // fill leaderboard array
+        for (int i = 0; i < 5; i++)
+        {   
+            leaderboard[i][0] = scoreData(i)[0];  
+            leaderboard[i][1] = scoreData(i)[1];  
         }
+           
+        
+
+        // check score against those on leaderboard
+        for (int i = 0; i < 5; i++)
+        {                  
+            if (score < Integer.parseInt(leaderboard[i][0]))
+            {
+                // make room for new score
+                for (int j = 4; j > i; j--)
+                {
+                    leaderboard[j][0] = leaderboard[j-1][0];
+                    leaderboard[j][1] = leaderboard[j-1][1];
+                }
+
+                // add score & name to array
+                if (score < 10) 
+                    leaderboard[i][0] = "0" + score;
+                else
+                    leaderboard[i][0] = "" + score;
+                String name = JOptionPane.showInputDialog( "You got a high score! Enter your name:");
+                leaderboard[i][1] = name;
+
+                break;
+            }        
+        }
+
+        // delete and rewrite leaderboard file
+        PrintWriter fileWriter = new PrintWriter(scores);
+        fileWriter.write("");
+        for (int i = 0; i < 5; i++)
+            fileWriter.println(leaderboard[i][0] + leaderboard[i][1]);
+
+        fileWriter.close();
+        
     }
 
     public void switchPage(String newpage) // switch between menu and gameplay
@@ -224,7 +371,10 @@ public class Gameplay extends JPanel implements MouseListener {
 
                 else if (x >= 95 && x <= 404 && y >= 440 && y <= 490)
                     switchPage("HELP");
-
+                
+                else if (x >= 95 && x <= 404 && y >= 505 && y <= 550)
+                    switchPage("SCORES");
+                
                 break;
 
             case "GAME":
@@ -262,7 +412,12 @@ public class Gameplay extends JPanel implements MouseListener {
                         mainMenu();
 
                 }
-                break;                           
+                break; 
+            
+            case "SCORES":
+                //g.fillRect(150, 525, 200, 50);
+                if (x >= 150 && x <= 350 && y >= 525 && y <= 575)
+                    mainMenu();
         }
         
     }
@@ -272,6 +427,7 @@ public class Gameplay extends JPanel implements MouseListener {
         // reset variables for proper gameplay
         playing = true;
         guessing = false;
+        win = false;
         guessRow = -1;
         guessCol = -1;
         // reshuffle deck & reset number of cards
@@ -293,7 +449,56 @@ public class Gameplay extends JPanel implements MouseListener {
         repaint();
     }
 
+    public void winAnimation()
+    {
+
+    }
+
     public void makeGuess(int guess)
+    {
+        guessing = false;
+
+        // if incorrect guess, game is over & player did not win
+        if (!correctGuess(guess))
+        {
+            win = false;
+            playing = false;
+            repaint();               
+            try 
+                {
+                    checkForHighScore(deck.getNumberOfCards()+1);
+                }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        // if correct guess & no cards remaining, player won
+        else if (deck.getNumberOfCards() == 0)
+        {
+            win = true;
+            playing = false;
+            repaint();               
+            try 
+                {
+                    checkForHighScore(deck.getNumberOfCards());
+                }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+           
+        }
+        
+        // if game is not over and player made correct guess, reset variables for gameplay
+        if (playing) {
+            guessing = false;
+            guessRow = -1;
+            guessCol = -1;
+            repaint();
+        }
+
+    }
+
+    public boolean correctGuess(int guess)
     {
         // store value of current card to compare
         String currentcard = board[guessRow][guessCol];
@@ -301,17 +506,11 @@ public class Gameplay extends JPanel implements MouseListener {
         // find value of next card in the deck
         board[guessRow][guessCol] = deck.nextCard();
 
-        // check for incorrect guess
         if ((deck.getCardValue(currentcard) < deck.getCardValue(board[guessRow][guessCol]) && guess == -1) || 
         (deck.getCardValue(currentcard) > deck.getCardValue(board[guessRow][guessCol]) && guess == 1))
-            playing = false;
-
-        // if guessed correctly, reset variables for proper game play and show new board
-        guessing = false;
-        guessRow = -1;
-        guessCol = -1;
-        repaint();
-
+            return false;
+        
+        return true;
     }
 
     @Override

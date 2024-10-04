@@ -47,11 +47,11 @@ public class Deck {
     public String getSuit(int card)
     {
         String suit = "";
-        if (card < 14)
+        if (card < 13)
             suit = "♠️";
-        else if (card < 27)
+        else if (card < 26)
             suit = "♣️";
-        else if (card < 40)
+        else if (card < 39)
             suit = "♥︎";
         else
             suit = "♦";
