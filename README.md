@@ -10,7 +10,7 @@ Download the Higher or Lower folder and contents inside. Open the HigherOrLower.
 ## Possible Future Additions
 <ul>
 <li> Option to quit mid game </li>
-<li> Levels of Difficults (fewer cards or multiple lives) <li>
+<li> Levels of Difficults (fewer cards or multiple lives) </li>
 <li> Visible deck and counter, allowing players to see remaining cards </li>
 <li> Realistic playing card designs </li>
 <li> Animations </li>
